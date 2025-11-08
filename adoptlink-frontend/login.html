@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdoptLink - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: url('https://images.unsplash.com/photo-1541559475991-4b2b1c5c1c5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: 0;
+        }
+        
+        .admin-login-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #4a6fa5;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .admin-login-btn:hover {
+            background: #3a5a80;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(to bottom right, #4a6fa5, #2c3e50);
+            color: white;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1541559475991-4b2b1c5c1c5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center;
+            background-size: cover;
+            opacity: 0.15;
+        }
+        
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-section h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .welcome-section p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 15px;
+            position: relative;
+        }
+        
+        .features {
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .feature i {
+            margin-right: 12px;
+            color: #ffd700;
+            font-size: 18px;
+            min-width: 20px;
+        }
+        
+        .carings-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .carings-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .carings-section h3 i {
+            color: #ffd700;
+        }
+        
+        .carings-btn {
+            display: inline-block;
+            background: #ffd700;
+            color: #2c3e50;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .carings-btn:hover {
+            background: #ffed4a;
+            transform: translateY(-2px);
+        }
+        
+        .process-steps {
+            margin-top: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .process-steps h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .process-steps h3 i {
+            color: #ffd700;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .step-number {
+            background: #ffd700;
+            color: #2c3e50;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .step-content p {
+            font-size: 13px;
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .form-section {
+            flex: 1;
+            padding: 40px 30px;
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h2 {
+            color: #2c3e50;
+            font-size: 26px;
+            margin-top: 12px;
+        }
+        
+        .logo-icon {
+            font-size: 36px;
+            color: #4a6fa5;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #777;
+            transition: all 0.3s;
+            position: relative;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .tab.active {
+            color: #4a6fa5;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #4a6fa5;
+        }
+        
+        .form {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+            font-size: 14px;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4a6fa5;
+            outline: none;
+        }
+        
+        .form-group i {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            color: #777;
+        }
+        
+        .user-type {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .user-type label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            flex: 1;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .user-type label:hover {
+            background: #e9ecef;
+        }
+        
+        .user-type input {
+            margin-right: 8px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #3a5a80;
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .forgot-password a {
+            color: #4a6fa5;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .demo-credentials {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        
+        .demo-credentials h3 {
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 15px;
+        }
+        
+        .demo-credentials p {
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                max-width: 500px;
+            }
+            
+            .welcome-section {
+                padding: 25px;
+            }
+            
+            .form-section {
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .user-type {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-bottom: 8px;
+            }
+            
+            .admin-login-btn {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 0 auto 20px;
+                display: block;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Button -->
+    <a href="#" class="admin-login-btn" onclick="showAdminLogin()">
+        <i class="fas fa-user-shield"></i> Admin Login
+    </a>
+
+    <!-- Login Page -->
+    <div class="container" id="login-container">
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <h1>Child Adoption & Growth Tracking System</h1>
+                <p>A secure platform connecting prospective parents with orphanages and simplifying the legal adoption process in India.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-heart"></i>
+                        <span>Ensuring transparency and child welfare</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure and verified adoption process</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Comprehensive growth tracking</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <span>Support throughout the adoption journey</span>
+                    </div>
+                </div>
+                
+                <div class="carings-section">
+                    <h3><i class="fas fa-external-link-alt"></i> Official CARINGS Portal</h3>
+                    <p>CARINGS (Child Adoption Resource Information and Guidance System) is the official Government portal for adoption in India.</p>
+                    <a href="https://carings.wcd.gov.in/" target="_blank" class="carings-btn">
+                        <i class="fas fa-external-link-alt"></i> Visit CARINGS Website
+                    </a>
+                </div>
+                
+                <div class="process-steps">
+                    <h3><i class="fas fa-list-ol"></i> Adoption Process Steps</h3>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>CARINGS Registration</h4>
+                            <p>Create your official account on CARINGS website</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Home Study Report</h4>
+                            <p>Complete home study by authorized agency</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Child Referral</h4>
+                            <p>Receive child proposal based on preferences</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Acceptance</h4>
+                            <p>Accept child and complete legal procedures</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <h2>Welcome</h2>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showForm('login')">Login</div>
+                <div class="tab" onclick="showForm('signup')">Sign Up</div>
+            </div>
+            
+            <div id="login-form" class="form active">
+               
+                
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" placeholder="Enter your email">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                
+                <div class="user-type">
+                    <label><input type="radio" name="user-type" value="parent" checked> Parent</label>
+                    <label><input type="radio" name="user-type" value="staff"> Staff</label>
+                </div>
+                
+                <button class="btn" onclick="login()">Login</button>
+                
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </div>
+            
+            <div id="signup-form" class="form">
+                <div class="demo-credentials">
+                    <h3>Create a New Account</h3>
+                    <p>Fill in the details below to create your account</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" placeholder="Enter your full name">
+                    <i class="fas fa-user"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" placeholder="Enter your email">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" placeholder="Create a password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-confirm">Confirm Password</label>
+                    <input type="password" id="signup-confirm" placeholder="Confirm your password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-phone">Phone Number</label>
+                    <input type="tel" id="signup-phone" placeholder="Enter your phone number">
+                    <i class="fas fa-phone"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="carings-id">CARINGS ID</label>
+                    <input type="text" id="carings-id" placeholder="Enter your CARINGS ID if available">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                
+                <div class="user-type">
+                    <label><input type="radio" name="signup-user-type" value="parent" checked> Parent</label>
+                    <label><input type="radio" name="signup-user-type" value="staff"> Staff</label>
+                </div>
+                
+                <button class="btn" onclick="signup()">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 10px; width: 400px; max-width: 90%; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <h2 style="margin-bottom: 20px; color: #2c3e50; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-user-shield"></i> Admin Login
+            </h2>
+            
+            <div class="form-group">
+                <label for="admin-email">Admin Email</label>
+                <input type="email" id="admin-email" placeholder="Enter admin email" value="admin@example.com">
+                <i class="fas fa-envelope"></i>
+            </div>
+            
+            <div class="form-group">
+                <label for="admin-password">Password</label>
+                <input type="password" id="admin-password" placeholder="Enter admin password" value="password123">
+                <i class="fas fa-lock"></i>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn" onclick="adminLogin()" style="flex: 1;">Login</button>
+                <button class="btn" onclick="hideAdminLogin()" style="background: #6c757d; flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+async function login(event) {
+  event.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+
+  const res = await fetch('http://localhost:3000/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+
+  if (!res.ok) {
+    alert('Invalid credentials');
+    return;
+  }
+
+  const data = await res.json();
+  localStorage.setItem('token', data.token);
+  // go to dashboard
+  window.location.href = 'index.html';
+}
+
+
+        // User database simulation
+        const users = [
+            {
+                id: 1,
+                name: "John Parent",
+                email: "parent@example.com",
+                password: "password123",
+                type: "parent",
+                phone: "+1234567890",
+                caringsId: ""
+            },
+            {
+                id: 2,
+                name: "Sarah Staff",
+                email: "staff@example.com",
+                password: "password123",
+                type: "staff",
+                phone: "+0987654321",
+                caringsId: ""
+            },
+            {
+                id: 3,
+                name: "Admin User",
+                email: "admin@example.com",
+                password: "password123",
+                type: "admin",
+                phone: "+1122334455",
+                caringsId: ""
+            }
+        ];
+
+        // Initialize localStorage with users
+        function initializeUsers() {
+            const storedUsers = localStorage.getItem('adoptlink_users');
+            if (!storedUsers) {
+                localStorage.setItem('adoptlink_users', JSON.stringify(users));
+                console.log('Initialized users with admin:', users);
+            } else {
+                console.log('Users already exist in localStorage:', JSON.parse(storedUsers));
+            }
+        }
+
+        function showForm(formType) {
+            document.querySelectorAll('.form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            if (formType === 'login') {
+                document.getElementById('login-form').classList.add('active');
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else {
+                document.getElementById('signup-form').classList.add('active');
+                document.querySelectorAll('.tab')[1].classList.add('active');
+            }
+        }
+        
+        // Update login function
+// Updated login function
+// Updated login function
+async function login() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const userType = document.querySelector('input[name="user-type"]:checked').value;
+    
+    console.log('Login attempt:', { email, password, userType });
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, type: userType })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            localStorage.setItem('token', data.token);
+            sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+            
+            console.log('Login successful, redirecting to:', userType);
+            
+            // Redirect based on user type
+            if (userType === 'admin') {
+                window.location.href = 'admin.html';
+            } else if (userType === 'staff') {
+                window.location.href = 'staff.html';
+            } else if (userType === 'parent') {
+                window.location.href = 'parent.html';
+            } else {
+                // Default fallback
+                window.location.href = 'parent.html';
+            }
+        } else {
+            alert('Login failed: ' + data.error);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('Login failed: ' + error.message);
+    }
+}
+
+    // Simple signup function
+    async function signup() {
+        alert('For now, please use the demo accounts instead of signing up.');
+        showForm('login');
+    }
+
+    // Simple admin login
+    // Remove the duplicate adminLogin function and keep only this one:
+async function adminLogin() {
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+    
+    console.log('Admin login attempt:', { email, password });
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, type: 'admin' })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            localStorage.setItem('token', data.token);
+            sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+            alert('Admin login successful! Redirecting...');
+            window.location.href = 'admin.html';
+        } else {
+            alert('Admin login failed: ' + data.error);
+        }
+    } catch (error) {
+        console.error('Admin login error:', error);
+        alert('Admin login failed: ' + error.message);
+    }
+}
+
+    
+    // function showAdminLogin() {
+    //     document.getElementById('admin-login-modal').style.display = 'flex';
+    // }
+    
+    // function hideAdminLogin() {
+    //     document.getElementById('admin-login-modal').style.display = 'none';
+    // }
+
+    // Auto-fill demo credentials
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('login-email').value = 'admin@example.com';
+        document.getElementById('login-password').value = 'password123';
+        document.querySelector('input[name="user-type"][value="admin"]').checked = true;
+        
+        document.getElementById('admin-email').value = 'admin@example.com';
+        document.getElementById('admin-password').value = 'password123';
+    });
+// Updated signup function
+async function signup() {
+    const name = document.getElementById('signup-name').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const confirmPassword = document.getElementById('signup-confirm').value;
+    const phone = document.getElementById('signup-phone').value;
+    const caringsId = document.getElementById('carings-id').value;
+    const userType = document.querySelector('input[name="signup-user-type"]:checked').value;
+    
+    // Validation
+    if (!name || !email || !password || !confirmPassword || !phone) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                name, 
+                email, 
+                password, 
+                type: userType, 
+                phone, 
+                carings_id: caringsId 
+            })
+        });
+        
+        // Check if response is ok
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            localStorage.setItem('token', data.token);
+            sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+            
+            alert('Account created successfully! Redirecting to your dashboard...');
+            
+            // Redirect based on user type
+            if (userType === 'staff') {
+                window.location.href = 'staff.html';
+            } else if (userType === 'parent') {
+                window.location.href = 'parent.html';
+            }
+        } else {
+            alert('Registration failed: ' + data.error);
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        alert('Registration failed: ' + error.message);
+    }
+}
+
+        // Admin login functions
+        function showAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'flex';
+        }
+        
+        function hideAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+        }
+        
+        function adminLogin() {
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Get users from localStorage
+            const storedUsers = JSON.parse(localStorage.getItem('adoptlink_users')) || [];
+            
+            // Find admin user with matching credentials
+            const admin = storedUsers.find(u => 
+                u.email === email && 
+                u.password === password && 
+                u.type === 'admin'
+            );
+            
+            if (admin) {
+                sessionStorage.setItem('currentUser', JSON.stringify(admin));
+                alert('Admin login successful! Redirecting...');
+                window.location.href = 'admin.html';
+            } else {
+                alert('Invalid admin credentials. Please check your email and password.');
+            }
+        }
+
+        // Auto-fill demo credentials for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize users with admin
+            initializeUsers();
+            
+            // Auto-fill parent credentials by default
+            document.getElementById('login-email').value = 'parent@example.com';
+            document.getElementById('login-password').value = 'password123';
+            
+            // Set parent as default selected
+            document.querySelector('input[name="user-type"][value="parent"]').checked = true;
+            
+            // Add debug info
+            console.log('Page loaded. Available users:', JSON.parse(localStorage.getItem('adoptlink_users') || '[]'));
+        });
+    </script>
+</body>
+</html>

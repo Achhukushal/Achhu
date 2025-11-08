@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - AdoptLink</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --sidebar-width: 250px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--secondary), var(--dark));
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 20px 0;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        
+        .header h2 {
+            color: var(--secondary);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-verified {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-scheduled {
+            background-color: #e2e3f3;
+            color: #383d8c;
+        }
+        
+        /* Dashboard Content */
+        .dashboard-content {
+            display: none;
+        }
+        
+        .dashboard-content.active {
+            display: block;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .stat-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--secondary);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .info-value {
+            color: #555;
+            padding: 8px 0;
+        }
+        
+        .editable-field {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .editable-field .info-value {
+            flex: 1;
+        }
+        
+        .edit-icon {
+            color: var(--primary);
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .child-profile {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .child-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--light);
+        }
+        
+        .child-details {
+            flex: 1;
+        }
+        
+        .record-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .record-table th, .record-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .record-table th {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .record-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .edit-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning);
+        }
+        
+        .notification.error {
+            background-color: var(--danger);
+        }
+        
+        .cara-portal-link {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #e8f4fc;
+            border-radius: 10px;
+        }
+        
+        .cara-portal-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        
+        .cara-portal-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        .document-list {
+            list-style-type: none;
+        }
+        
+        .document-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .document-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .document-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .uploaded {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .activity-details p {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .activity-time {
+            color: #777;
+            font-size: 0.85rem;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .visit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .visit-details {
+            flex: 1;
+        }
+        
+        .visit-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .logo h1, .menu-item span {
+                display: none;
+            }
+            
+            .logo {
+                justify-content: center;
+                padding: 0 0 20px;
+            }
+            
+            .logo i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .child-profile {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-hands-helping"></i>
+            <h1>AdoptLink</h1>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item active" data-target="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </li>
+            <li class="menu-item" data-target="profile">
+                <i class="fas fa-user"></i>
+                <span>Parent Profile</span>
+            </li>
+            <li class="menu-item" data-target="documents">
+                <i class="fas fa-file-alt"></i>
+                <span>Documents</span>
+            </li>
+            <li class="menu-item" data-target="child">
+                <i class="fas fa-child"></i>
+                <span>Adopted Child</span>
+            </li>
+            <li class="menu-item" data-target="visits">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Scheduled Visits</span>
+            </li>
+            <li class="menu-item" data-target="health">
+                <i class="fas fa-heartbeat"></i>
+                <span>Health Records</span>
+            </li>
+            <li class="menu-item" data-target="education">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Education</span>
+            </li>
+            <li class="menu-item" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2 id="pageTitle">Parent Dashboard</h2>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">JD</div>
+                <div>
+                    <div id="userName">John Doe</div>
+                    <div class="status-badge status-pending" id="statusBadge">Pending Verification</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content active" id="dashboard">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #e8f4fc; color: var(--primary);">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="verifiedStatus">Pending</h3>
+                        <p>Verification Status</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #e8f6f3; color: var(--success);">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="healthRecordsCount">2</h3>
+                        <p>Health Records</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #fef9e7; color: var(--warning);">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="educationRecordsCount">3</h3>
+                        <p>Education Records</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #e2e3f3; color: #383d8c;">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="scheduledVisitsCount">1</h3>
+                        <p>Scheduled Visits</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Activity</h3>
+                </div>
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background-color: #e8f4fc;">
+                            <i class="fas fa-user-plus" style="color: var(--primary);"></i>
+                        </div>
+                        <div class="activity-details">
+                            <p>You registered with AdoptLink</p>
+                            <span class="activity-time">2 days ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background-color: #e8f6f3;">
+                            <i class="fas fa-file-upload" style="color: var(--success);"></i>
+                        </div>
+                        <div class="activity-details">
+                            <p>You uploaded identification documents</p>
+                            <span class="activity-time">1 day ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background-color: #fef9e7;">
+                            <i class="fas fa-envelope" style="color: var(--warning);"></i>
+                        </div>
+                        <div class="activity-details">
+                            <p>Verification email sent to staff</p>
+                            <span class="activity-time">12 hours ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background-color: #e2e3f3;">
+                            <i class="fas fa-calendar" style="color: #383d8c;"></i>
+                        </div>
+                        <div class="activity-details">
+                            <p>Home visit scheduled for January 20, 2024</p>
+                            <span class="activity-time">2 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+        </div>
+
+        <!-- Profile Content -->
+        <div class="dashboard-content" id="profile">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Personal Information</h3>
+                    <button class="btn btn-primary" id="editProfileBtn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+                <div class="info-grid" id="profileInfo">
+                    <div class="info-item">
+                        <div class="info-label">Full Name</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="profileName">John Doe</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('profileName')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email Address</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="profileEmail">john.doe@example.com</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('profileEmail')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone Number</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="profilePhone">+1 (555) 123-4567</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('profilePhone')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Address</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="profileAddress">123 Main Street, City, State 12345</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('profileAddress')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Registration Date</div>
+                        <div class="info-value" id="profileRegDate">January 15, 2023</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" id="profileStatus">Pending Verification</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Family Information</h3>
+                    <button class="btn btn-primary" id="editFamilyInfoBtn">
+                        <i class="fas fa-edit"></i> Edit Family Info
+                    </button>
+                </div>
+                <div class="info-grid" id="familyInfo">
+                    <div class="info-item">
+                        <div class="info-label">Marital Status</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="maritalStatus">Married</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('maritalStatus')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Spouse Name</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="spouseName">Jane Doe</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('spouseName')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Number of Children</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="childrenCount">2</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('childrenCount')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Occupation</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="occupation">Software Engineer</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('occupation')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Annual Income</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="annualIncome">850000</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('annualIncome')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Home Type</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="homeType">Owned</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('homeType')"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Content -->
+        <div class="dashboard-content" id="documents">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Required Documents</h3>
+                </div>
+                <ul class="document-list">
+                    <li class="document-item">
+                        <div>
+                            <strong>Identification Proof</strong>
+                            <p>Government issued ID card</p>
+                            <span class="document-status pending" id="idProofStatus">Pending</span>
+                        </div>
+                        <div class="document-actions">
+                            <input type="file" id="idProofFile" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
+                            <button class="btn btn-primary file-upload-btn" onclick="document.getElementById('idProofFile').click()">
+                                <i class="fas fa-upload"></i> Upload
+                            </button>
+                        </div>
+                    </li>
+                    <li class="document-item">
+                        <div>
+                            <strong>Address Proof</strong>
+                            <p>Utility bill or rental agreement</p>
+                            <span class="document-status pending" id="addressProofStatus">Pending</span>
+                        </div>
+                        <div class="document-actions">
+                            <input type="file" id="addressProofFile" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
+                            <button class="btn btn-primary file-upload-btn" onclick="document.getElementById('addressProofFile').click()">
+                                <i class="fas fa-upload"></i> Upload
+                            </button>
+                        </div>
+                    </li>
+                    <li class="document-item">
+                        <div>
+                            <strong>Income Proof</strong>
+                            <p>Recent pay stubs or tax returns</p>
+                            <span class="document-status uploaded" id="incomeProofStatus">Uploaded</span>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <input type="file" id="incomeProofFile" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
+                            <button class="btn btn-warning file-upload-btn" onclick="document.getElementById('incomeProofFile').click()">
+                                <i class="fas fa-upload"></i> Re-upload
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Child Content -->
+        <div class="dashboard-content" id="child">
+            <div class="card">
+                <div class="child-profile">
+                    <img src="https://images.unsplash.com/photo-1516627145497-ae69578cfc06?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80" alt="Child Photo" class="child-photo">
+                    <div class="child-details">
+                        <h3>Emma Johnson</h3>
+                        <p><strong>Age:</strong> 7 years</p>
+                        <p><strong>Date of Birth:</strong> March 12, 2016</p>
+                        <p><strong>Adoption Date:</strong> June 5, 2023</p>
+                        <p><strong>Background:</strong> Emma came to us when she was 4 years old. She is a bright and cheerful child who loves drawing and outdoor activities. She has adjusted well to her new family and enjoys playing with her siblings.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Child Information</h3>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">Emma Johnson</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Date of Birth</div>
+                        <div class="info-value">March 12, 2016</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Age</div>
+                        <div class="info-value">7 years</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Gender</div>
+                        <div class="info-value">Female</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Placement Date</div>
+                        <div class="info-value">April 20, 2023</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Adoption Finalized</div>
+                        <div class="info-value">June 5, 2023</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visits Content -->
+        <div class="dashboard-content" id="visits">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Scheduled Visits</h3>
+                </div>
+                <div id="scheduledVisitsList">
+                    <div class="visit-item">
+                        <div class="visit-details">
+                            <h4>Home Visit</h4>
+                            <p><strong>Date:</strong> January 20, 2024 at 10:00 AM</p>
+                            <p><strong>Staff:</strong> Sarah Staff</p>
+                            <p><strong>Purpose:</strong> Initial home assessment for adoption process</p>
+                        </div>
+                        <div class="visit-actions">
+                            <button class="btn btn-primary" onclick="viewVisitDetails(1)">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                            <button class="btn btn-warning" onclick="requestReschedule(1)">
+                                <i class="fas fa-calendar-times"></i> Reschedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Request Reschedule</h3>
+                </div>
+                <form id="rescheduleForm">
+                    <div class="form-group">
+                        <label for="rescheduleVisit">Select Visit</label>
+                        <select id="rescheduleVisit" class="form-control" required>
+                            <option value="">Select a visit</option>
+                            <option value="1">Home Visit - January 20, 2024</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="requestedDate">Requested Date & Time</label>
+                        <input type="datetime-local" id="requestedDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rescheduleReason">Reason for Reschedule</label>
+                        <textarea id="rescheduleReason" class="form-control" placeholder="Please explain why you need to reschedule..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Request
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Health Records Content -->
+        <div class="dashboard-content" id="health">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Medical History</h3>
+                    <button class="btn btn-primary" id="addHealthRecord">
+                        <i class="fas fa-plus"></i> Add Record
+                    </button>
+                </div>
+                <table class="record-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Condition</th>
+                            <th>Treatment</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="healthRecordsTable">
+                        <!-- Health records will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Immunization Records</h3>
+                    <button class="btn btn-primary" id="addImmunization">
+                        <i class="fas fa-plus"></i> Add Immunization
+                    </button>
+                </div>
+                <table class="record-table">
+                    <thead>
+                        <tr>
+                            <th>Vaccine</th>
+                            <th>Date Administered</th>
+                            <th>Next Due</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="immunizationTable">
+                        <!-- Immunization records will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Education Content -->
+        <div class="dashboard-content" id="education">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">School Information</h3>
+                    <button class="btn btn-primary" id="editSchoolInfo">
+                        <i class="fas fa-edit"></i> Edit Information
+                    </button>
+                </div>
+                <div class="info-grid" id="schoolInfoDisplay">
+                    <div class="info-item">
+                        <div class="info-label">School Name</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="schoolName">Sunrise Elementary School</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('schoolName')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Grade</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="schoolGrade">2nd Grade</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('schoolGrade')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Teacher</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="schoolTeacher">Ms. Anderson</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('schoolTeacher')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">School Address</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="schoolAddress">456 Education Lane, City, State 12345</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('schoolAddress')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">School Phone</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="schoolPhone">(555) 987-6543</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('schoolPhone')"></i>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Enrollment Date</div>
+                        <div class="editable-field">
+                            <div class="info-value" id="enrollmentDate">August 15, 2023</div>
+                            <i class="fas fa-edit edit-icon" onclick="editField('enrollmentDate')"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Academic Performance</h3>
+                    <button class="btn btn-primary" id="addAcademicRecord">
+                        <i class="fas fa-plus"></i> Add Record
+                    </button>
+                </div>
+                <table class="record-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Current Grade</th>
+                            <th>Teacher Comments</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="academicTable">
+                        <!-- Academic records will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Extracurricular Activities</h3>
+                    <button class="btn btn-primary" id="addActivity">
+                        <i class="fas fa-plus"></i> Add Activity
+                    </button>
+                </div>
+                <div class="info-grid" id="activitiesList">
+                    <!-- Activities will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Health Record Modal -->
+    <div class="modal" id="healthRecordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="healthModalTitle">Add Health Record</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="healthRecordForm">
+                <input type="hidden" id="healthRecordId">
+                <div class="form-group">
+                    <label for="recordDate">Date</label>
+                    <input type="date" id="recordDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="condition">Condition</label>
+                    <input type="text" id="condition" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="treatment">Treatment</label>
+                    <input type="text" id="treatment" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="doctor">Doctor</label>
+                    <input type="text" id="doctor" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="recordStatus">Status</label>
+                    <select id="recordStatus" class="form-control" required>
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Record</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Academic Record Modal -->
+    <div class="modal" id="academicRecordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="academicModalTitle">Add Academic Record</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="academicRecordForm">
+                <input type="hidden" id="academicRecordId">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="grade">Grade</label>
+                    <input type="text" id="grade" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="comments">Teacher Comments</label>
+                    <textarea id="comments" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Record</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Activity Modal -->
+    <div class="modal" id="activityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="activityModalTitle">Add Activity</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="activityForm">
+                <input type="hidden" id="activityId">
+                <div class="form-group">
+                    <label for="activityName">Activity Name</label>
+                    <input type="text" id="activityName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="activitySchedule">Schedule</label>
+                    <input type="text" id="activitySchedule" class="form-control" required placeholder="e.g., Mondays, 3:00-4:30 PM">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Activity</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Immunization Modal -->
+    <div class="modal" id="immunizationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="immunizationModalTitle">Add Immunization</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="immunizationForm">
+                <input type="hidden" id="immunizationId">
+                <div class="form-group">
+                    <label for="vaccine">Vaccine</label>
+                    <input type="text" id="vaccine" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="administeredDate">Date Administered</label>
+                    <input type="date" id="administeredDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="nextDueDate">Next Due Date</label>
+                    <input type="date" id="nextDueDate" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Immunization</button>
+            </form>
+        </div>
+    </div>
+ <script src="js/parent.js"></script>
+    <script>
+        
+// Check authentication and get token
+// Check authentication and get token
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = 'login.html';
+    throw new Error('Not authenticated');
+}
+
+// Add this to all fetch requests
+const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + token
+};
+
+// Initialize dashboard with real data
+async function initializeDashboard() {
+    try {
+        const dashboardData = await getParentDashboard();
+        updateDashboardUI(dashboardData);
+    } catch (error) {
+        console.error('Failed to load dashboard:', error);
+        showNotification('Failed to load dashboard data', 'error');
+    }
+}
+
+// Update UI with real data
+function updateDashboardUI(data) {
+    // Update stats
+    document.getElementById('healthRecordsCount').textContent = data.stats.healthRecords;
+    document.getElementById('educationRecordsCount').textContent = data.stats.documents; // Adjust as needed
+    document.getElementById('scheduledVisitsCount').textContent = data.stats.scheduledVisits;
+    
+    // Update parent info
+    if (data.parent) {
+        document.getElementById('userName').textContent = data.parent.name;
+        document.getElementById('userAvatar').textContent = 
+            data.parent.name.split(' ').map(n => n[0]).join('');
+        
+        // Update profile information
+        document.getElementById('profileName').textContent = data.parent.name;
+        document.getElementById('profileEmail').textContent = data.parent.email;
+        document.getElementById('profilePhone').textContent = data.parent.phone;
+        document.getElementById('profileAddress').textContent = data.parent.address;
+        document.getElementById('profileStatus').textContent = data.parent.status;
+    }
+    
+    // Update status badge
+    const statusBadge = document.getElementById('statusBadge');
+    statusBadge.textContent = data.parent.status.charAt(0).toUpperCase() + data.parent.status.slice(1);
+    statusBadge.className = `status-badge status-${data.parent.status}`;
+}
+
+
+
+        // Sample data for parent dashboard
+        const parentData = {
+            currentUser: {
+                id: 201,
+                name: "John Doe",
+                email: "john.doe@example.com",
+                phone: "+1 (555) 123-4567",
+                type: "parent"
+            },
+            healthRecords: [
+                {
+                    id: 1,
+                    date: "2023-10-15",
+                    condition: "Annual Checkup",
+                    treatment: "Routine examination",
+                    doctor: "Dr. Smith",
+                    status: "Completed"
+                },
+                {
+                    id: 2,
+                    date: "2023-08-22",
+                    condition: "Allergy Testing",
+                    treatment: "Skin prick test",
+                    doctor: "Dr. Johnson",
+                    status: "Completed"
+                }
+            ],
+            immunizations: [
+                {
+                    id: 1,
+                    vaccine: "MMR",
+                    administeredDate: "2023-06-10",
+                    nextDueDate: "2027-06-10",
+                    status: "Completed"
+                },
+                {
+                    id: 2,
+                    vaccine: "DTaP",
+                    administeredDate: "2023-06-10",
+                    nextDueDate: "2026-06-10",
+                    status: "Completed"
+                }
+            ],
+            academicRecords: [
+                {
+                    id: 1,
+                    subject: "Mathematics",
+                    grade: "A",
+                    comments: "Emma shows strong problem-solving skills"
+                },
+                {
+                    id: 2,
+                    subject: "Reading",
+                    grade: "B+",
+                    comments: "Improving fluency, needs more practice"
+                }
+            ],
+            activities: [
+                {
+                    id: 1,
+                    name: "Art Club",
+                    schedule: "Mondays, 3:00-4:30 PM"
+                },
+                {
+                    id: 2,
+                    name: "Soccer",
+                    schedule: "Wednesdays, 4:00-5:30 PM"
+                }
+            ],
+            scheduledVisits: [
+                {
+                    id: 1,
+                    type: "Home Visit",
+                    date: "2024-01-20T10:00",
+                    staff: "Sarah Staff",
+                    purpose: "Initial home assessment for adoption process",
+                    status: "scheduled"
+                }
+            ]
+        };
+
+        // DOM Elements
+        const menuItems = document.querySelectorAll('.menu-item');
+        const dashboardContents = document.querySelectorAll('.dashboard-content');
+        const pageTitle = document.getElementById('pageTitle');
+        const notification = document.getElementById('notification');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const addHealthRecordBtn = document.getElementById('addHealthRecord');
+        const addImmunizationBtn = document.getElementById('addImmunization');
+        const addAcademicRecordBtn = document.getElementById('addAcademicRecord');
+        const addActivityBtn = document.getElementById('addActivity');
+        const healthRecordModal = document.getElementById('healthRecordModal');
+        const academicRecordModal = document.getElementById('academicRecordModal');
+        const activityModal = document.getElementById('activityModal');
+        const immunizationModal = document.getElementById('immunizationModal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        const healthRecordForm = document.getElementById('healthRecordForm');
+        const academicRecordForm = document.getElementById('academicRecordForm');
+        const activityForm = document.getElementById('activityForm');
+        const immunizationForm = document.getElementById('immunizationForm');
+        const rescheduleForm = document.getElementById('rescheduleForm');
+        const fileInputs = document.querySelectorAll('.file-input');
+
+        // Check if user is logged in
+        function checkAuth() {
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || parentData.currentUser;
+            if (!currentUser || currentUser.type !== 'parent') {
+                window.location.href = 'login.html';
+                return;
+            }
+            return currentUser;
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = checkAuth();
+            if (user) {
+                updateUserInfo(user);
+                initializeDashboard();
+                setupFileUploads();
+            }
+        });
+
+        menuItems.forEach(item => {
+            if (item.id !== 'logoutBtn') {
+                item.addEventListener('click', () => {
+                    const target = item.getAttribute('data-target');
+                    
+                    // Update active menu item
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // Show corresponding content
+                    dashboardContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === target) {
+                            content.classList.add('active');
+                        }
+                    });
+                    
+                    // Update page title
+                    pageTitle.textContent = item.querySelector('span').textContent;
+                });
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+
+        addHealthRecordBtn.addEventListener('click', () => {
+            document.getElementById('healthModalTitle').textContent = 'Add Health Record';
+            document.getElementById('healthRecordId').value = '';
+            healthRecordForm.reset();
+            healthRecordModal.style.display = 'flex';
+        });
+
+        addImmunizationBtn.addEventListener('click', () => {
+            document.getElementById('immunizationModalTitle').textContent = 'Add Immunization';
+            document.getElementById('immunizationId').value = '';
+            immunizationForm.reset();
+            immunizationModal.style.display = 'flex';
+        });
+
+        addAcademicRecordBtn.addEventListener('click', () => {
+            document.getElementById('academicModalTitle').textContent = 'Add Academic Record';
+            document.getElementById('academicRecordId').value = '';
+            academicRecordForm.reset();
+            academicRecordModal.style.display = 'flex';
+        });
+
+        addActivityBtn.addEventListener('click', () => {
+            document.getElementById('activityModalTitle').textContent = 'Add Activity';
+            document.getElementById('activityId').value = '';
+            activityForm.reset();
+            activityModal.style.display = 'flex';
+        });
+
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                healthRecordModal.style.display = 'none';
+                academicRecordModal.style.display = 'none';
+                activityModal.style.display = 'none';
+                immunizationModal.style.display = 'none';
+            });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === healthRecordModal) healthRecordModal.style.display = 'none';
+            if (e.target === academicRecordModal) academicRecordModal.style.display = 'none';
+            if (e.target === activityModal) activityModal.style.display = 'none';
+            if (e.target === immunizationModal) immunizationModal.style.display = 'none';
+        });
+
+        // Form Submissions
+        healthRecordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveHealthRecord();
+        });
+
+        academicRecordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveAcademicRecord();
+        });
+
+        activityForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveActivity();
+        });
+
+        immunizationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveImmunization();
+        });
+
+        rescheduleForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitRescheduleRequest();
+        });
+
+        // Functions
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        function updateUserInfo(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userAvatar').textContent = 
+                user.name.split(' ').map(n => n[0]).join('');
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profilePhone').textContent = user.phone;
+        }
+
+        function initializeDashboard() {
+            populateHealthRecords();
+            populateImmunizations();
+            populateAcademicRecords();
+            populateActivities();
+            updateStats();
+            
+            // Simulate staff verification after 5 seconds (for demo)
+            setTimeout(() => {
+                const statusBadge = document.getElementById('statusBadge');
+                if (statusBadge.classList.contains('status-pending')) {
+                    statusBadge.textContent = 'Verified';
+                    statusBadge.className = 'status-badge status-verified';
+                    document.getElementById('verifiedStatus').textContent = 'Verified';
+                    document.getElementById('profileStatus').textContent = 'Verified';
+                    showNotification('Your account has been verified by AdoptLink staff!', 'success');
+                }
+            }, 5000);
+        }
+
+        function setupFileUploads() {
+            fileInputs.forEach(input => {
+                input.addEventListener('change', function(e) {
+                    if (this.files && this.files[0]) {
+                        const fileName = this.id.replace('File', '');
+                        const statusElement = document.getElementById(fileName + 'Status');
+                        if (statusElement) {
+                            statusElement.textContent = 'Uploaded';
+                            statusElement.className = 'document-status uploaded';
+                            showNotification('Document uploaded successfully!', 'success');
+                            
+                            // Update pending documents count
+                            const pendingDocs = document.getElementById('pendingDocuments');
+                            if (pendingDocs.textContent > '0') {
+                                pendingDocs.textContent = parseInt(pendingDocs.textContent) - 1;
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('healthRecordsCount').textContent = parentData.healthRecords.length;
+            document.getElementById('educationRecordsCount').textContent = parentData.academicRecords.length;
+            document.getElementById('scheduledVisitsCount').textContent = parentData.scheduledVisits.length;
+        }
+
+        // Profile Editing Functions
+        function editField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const currentValue = field.textContent;
+            const newValue = prompt(`Edit ${fieldId.replace(/([A-Z])/g, ' $1').toLowerCase()}:`, currentValue);
+            if (newValue !== null && newValue.trim() !== '') {
+                field.textContent = newValue.trim();
+                showNotification('Field updated successfully!', 'success');
+            }
+        }
+
+        // Health Records Functions
+        function populateHealthRecords() {
+            const container = document.getElementById('healthRecordsTable');
+            
+            container.innerHTML = parentData.healthRecords.map(record => `
+                <tr data-id="${record.id}">
+                    <td>${formatDate(record.date)}</td>
+                    <td>${record.condition}</td>
+                    <td>${record.treatment}</td>
+                    <td>${record.doctor}</td>
+                    <td><span class="status-badge status-approved">${record.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="edit-btn" onclick="editHealthRecord(${record.id})"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" onclick="deleteHealthRecord(${record.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function saveHealthRecord() {
+            const id = document.getElementById('healthRecordId').value;
+            const formData = {
+                date: document.getElementById('recordDate').value,
+                condition: document.getElementById('condition').value,
+                treatment: document.getElementById('treatment').value,
+                doctor: document.getElementById('doctor').value,
+                status: document.getElementById('recordStatus').value
+            };
+            
+            if (id) {
+                // Edit existing record
+                const record = parentData.healthRecords.find(r => r.id == id);
+                if (record) {
+                    Object.assign(record, formData);
+                }
+            } else {
+                // Add new record
+                const newRecord = {
+                    id: parentData.healthRecords.length + 1,
+                    ...formData
+                };
+                parentData.healthRecords.push(newRecord);
+            }
+            
+            healthRecordModal.style.display = 'none';
+            populateHealthRecords();
+            updateStats();
+            showNotification('Health record saved successfully!', 'success');
+            healthRecordForm.reset();
+        }
+
+        function editHealthRecord(recordId) {
+            const record = parentData.healthRecords.find(r => r.id === recordId);
+            if (record) {
+                document.getElementById('healthModalTitle').textContent = 'Edit Health Record';
+                document.getElementById('healthRecordId').value = record.id;
+                document.getElementById('recordDate').value = record.date;
+                document.getElementById('condition').value = record.condition;
+                document.getElementById('treatment').value = record.treatment;
+                document.getElementById('doctor').value = record.doctor;
+                document.getElementById('recordStatus').value = record.status;
+                
+                healthRecordModal.style.display = 'flex';
+            }
+        }
+
+        function deleteHealthRecord(recordId) {
+            if (confirm('Are you sure you want to delete this health record?')) {
+                parentData.healthRecords = parentData.healthRecords.filter(r => r.id !== recordId);
+                populateHealthRecords();
+                updateStats();
+                showNotification('Health record deleted successfully!', 'success');
+            }
+        }
+
+        // Immunization Functions
+        function populateImmunizations() {
+            const container = document.getElementById('immunizationTable');
+            
+            container.innerHTML = parentData.immunizations.map(immunization => `
+                <tr data-id="${immunization.id}">
+                    <td>${immunization.vaccine}</td>
+                    <td>${formatDate(immunization.administeredDate)}</td>
+                    <td>${formatDate(immunization.nextDueDate)}</td>
+                    <td><span class="status-badge status-approved">${immunization.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="edit-btn" onclick="editImmunization(${immunization.id})"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" onclick="deleteImmunization(${immunization.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function saveImmunization() {
+            const id = document.getElementById('immunizationId').value;
+            const formData = {
+                vaccine: document.getElementById('vaccine').value,
+                administeredDate: document.getElementById('administeredDate').value,
+                nextDueDate: document.getElementById('nextDueDate').value,
+                status: "Completed"
+            };
+            
+            if (id) {
+                // Edit existing record
+                const immunization = parentData.immunizations.find(i => i.id == id);
+                if (immunization) {
+                    Object.assign(immunization, formData);
+                }
+            } else {
+                // Add new record
+                const newImmunization = {
+                    id: parentData.immunizations.length + 1,
+                    ...formData
+                };
+                parentData.immunizations.push(newImmunization);
+            }
+            
+            immunizationModal.style.display = 'none';
+            populateImmunizations();
+            showNotification('Immunization record saved successfully!', 'success');
+            immunizationForm.reset();
+        }
+
+        function editImmunization(immunizationId) {
+            const immunization = parentData.immunizations.find(i => i.id === immunizationId);
+            if (immunization) {
+                document.getElementById('immunizationModalTitle').textContent = 'Edit Immunization';
+                document.getElementById('immunizationId').value = immunization.id;
+                document.getElementById('vaccine').value = immunization.vaccine;
+                document.getElementById('administeredDate').value = immunization.administeredDate;
+                document.getElementById('nextDueDate').value = immunization.nextDueDate;
+                
+                immunizationModal.style.display = 'flex';
+            }
+        }
+
+        function deleteImmunization(immunizationId) {
+            if (confirm('Are you sure you want to delete this immunization record?')) {
+                parentData.immunizations = parentData.immunizations.filter(i => i.id !== immunizationId);
+                populateImmunizations();
+                showNotification('Immunization record deleted successfully!', 'success');
+            }
+        }
+
+        // Academic Records Functions
+        function populateAcademicRecords() {
+            const container = document.getElementById('academicTable');
+            
+            container.innerHTML = parentData.academicRecords.map(record => `
+                <tr data-id="${record.id}">
+                    <td>${record.subject}</td>
+                    <td>${record.grade}</td>
+                    <td>${record.comments}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="edit-btn" onclick="editAcademicRecord(${record.id})"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" onclick="deleteAcademicRecord(${record.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function saveAcademicRecord() {
+            const id = document.getElementById('academicRecordId').value;
+            const formData = {
+                subject: document.getElementById('subject').value,
+                grade: document.getElementById('grade').value,
+                comments: document.getElementById('comments').value
+            };
+            
+            if (id) {
+                // Edit existing record
+                const record = parentData.academicRecords.find(r => r.id == id);
+                if (record) {
+                    Object.assign(record, formData);
+                }
+            } else {
+                // Add new record
+                const newRecord = {
+                    id: parentData.academicRecords.length + 1,
+                    ...formData
+                };
+                parentData.academicRecords.push(newRecord);
+            }
+            
+            academicRecordModal.style.display = 'none';
+            populateAcademicRecords();
+            updateStats();
+            showNotification('Academic record saved successfully!', 'success');
+            academicRecordForm.reset();
+        }
+
+        function editAcademicRecord(recordId) {
+            const record = parentData.academicRecords.find(r => r.id === recordId);
+            if (record) {
+                document.getElementById('academicModalTitle').textContent = 'Edit Academic Record';
+                document.getElementById('academicRecordId').value = record.id;
+                document.getElementById('subject').value = record.subject;
+                document.getElementById('grade').value = record.grade;
+                document.getElementById('comments').value = record.comments;
+                
+                academicRecordModal.style.display = 'flex';
+            }
+        }
+
+        function deleteAcademicRecord(recordId) {
+            if (confirm('Are you sure you want to delete this academic record?')) {
+                parentData.academicRecords = parentData.academicRecords.filter(r => r.id !== recordId);
+                populateAcademicRecords();
+                updateStats();
+                showNotification('Academic record deleted successfully!', 'success');
+            }
+        }
+
+        // Activity Functions
+        function populateActivities() {
+            const container = document.getElementById('activitiesList');
+            
+            container.innerHTML = parentData.activities.map(activity => `
+                <div class="info-item" data-id="${activity.id}">
+                    <div class="info-label">${activity.name}</div>
+                    <div class="info-value">${activity.schedule}</div>
+                    <div class="action-buttons">
+                        <button class="edit-btn" onclick="editActivity(${activity.id})"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" onclick="deleteActivity(${activity.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveActivity() {
+            const id = document.getElementById('activityId').value;
+            const formData = {
+                name: document.getElementById('activityName').value,
+                schedule: document.getElementById('activitySchedule').value
+            };
+            
+            if (id) {
+                // Edit existing activity
+                const activity = parentData.activities.find(a => a.id == id);
+                if (activity) {
+                    Object.assign(activity, formData);
+                }
+            } else {
+                // Add new activity
+                const newActivity = {
+                    id: parentData.activities.length + 1,
+                    ...formData
+                };
+                parentData.activities.push(newActivity);
+            }
+            
+            activityModal.style.display = 'none';
+            populateActivities();
+            showNotification('Activity saved successfully!', 'success');
+            activityForm.reset();
+        }
+
+        function editActivity(activityId) {
+            const activity = parentData.activities.find(a => a.id === activityId);
+            if (activity) {
+                document.getElementById('activityModalTitle').textContent = 'Edit Activity';
+                document.getElementById('activityId').value = activity.id;
+                document.getElementById('activityName').value = activity.name;
+                document.getElementById('activitySchedule').value = activity.schedule;
+                
+                activityModal.style.display = 'flex';
+            }
+        }
+
+        function deleteActivity(activityId) {
+            if (confirm('Are you sure you want to delete this activity?')) {
+                parentData.activities = parentData.activities.filter(a => a.id !== activityId);
+                populateActivities();
+                showNotification('Activity deleted successfully!', 'success');
+            }
+        }
+
+        // Visit Functions
+        function viewVisitDetails(visitId) {
+            const visit = parentData.scheduledVisits.find(v => v.id === visitId);
+            if (visit) {
+                alert(`Visit Details:\n\nType: ${visit.type}\nDate: ${formatDateTime(visit.date)}\nStaff: ${visit.staff}\nPurpose: ${visit.purpose}\nStatus: ${visit.status}`);
+            }
+        }
+
+        function requestReschedule(visitId) {
+            document.getElementById('rescheduleVisit').value = visitId;
+            document.querySelector('[data-target="visits"]').click();
+        }
+
+        function submitRescheduleRequest() {
+            const visitId = document.getElementById('rescheduleVisit').value;
+            const requestedDate = document.getElementById('requestedDate').value;
+            const reason = document.getElementById('rescheduleReason').value;
+            
+            const visit = parentData.scheduledVisits.find(v => v.id == visitId);
+            if (visit) {
+                // In a real application, this would send a request to the staff
+                showNotification('Reschedule request submitted! Staff will review your request.', 'success');
+                rescheduleForm.reset();
+                
+                // Add to activity list
+                const activityList = document.getElementById('activityList');
+                const newActivity = document.createElement('div');
+                newActivity.className = 'activity-item';
+                newActivity.innerHTML = `
+                    <div class="activity-icon" style="background-color: #fef9e7;">
+                        <i class="fas fa-calendar-times" style="color: var(--warning);"></i>
+                    </div>
+                    <div class="activity-details">
+                        <p>You requested to reschedule the ${visit.type} to ${formatDateTime(requestedDate)}</p>
+                        <span class="activity-time">Just now</span>
+                    </div>
+                `;
+                activityList.prepend(newActivity);
+            }
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString();
+        }
+
+        function formatDateTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+            return date.toLocaleString();
+        }
+    </script>
+</body>
+<!-- Common functions first -->
+<script src="js/common.js"></script>
+<!-- Then auth functions -->
+<script src="js/auth.js"></script>
+<!-- Then page-specific JS -->
+<script src="js/login.js"></script>  <!-- For login.html -->
+<script src="js/parent.js"></script> <!-- For parent.html -->
+<script src="js/staff.js"></script>  <!-- For staff.html -->
+<script src="js/admin.js"></script>  <!-- For admin.html -->
+</html>
