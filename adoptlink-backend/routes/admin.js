@@ -1,22 +1,14 @@
+// admin.js (backend route)
 const express = require('express');
-const { auth, authorize } = require('../middleware/auth');
 const { pool } = require('../config/database');
 
 const router = express.Router();
 
-// Admin dashboard
-router.get('/dashboard', auth, authorize('admin'), async (req, res) => {
+router.get('/dashboard', async (req, res) => {
   try {
-    // Get total users count
     const [totalUsers] = await pool.execute('SELECT COUNT(*) as count FROM users');
-    
-    // Get total parents count
     const [totalParents] = await pool.execute('SELECT COUNT(*) as count FROM parents');
-    
-    // Get total children count
     const [totalChildren] = await pool.execute('SELECT COUNT(*) as count FROM children');
-    
-    // Get pending verifications
     const [pendingVerifications] = await pool.execute(
       'SELECT COUNT(*) as count FROM users WHERE status = "pending"'
     );

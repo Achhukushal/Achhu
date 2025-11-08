@@ -30,6 +30,9 @@ initDatabase().then(() => {
   app.use('/api/staff', staffRoutes);
   app.use('/api/admin', adminRoutes);
   app.use('/api/visits', visitRoutes);
+const childrenRoutes = require('./routes/children');
+app.use('/api/children', childrenRoutes);
+
 
   // Test route
   app.get('/api/test', (req, res) => {
@@ -37,10 +40,12 @@ initDatabase().then(() => {
   });
 
   // Error handling middleware
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });
-  });
+  // Error handling middleware (for debugging)
+app.use((err, req, res, next) => {
+  console.error('🔴 Full Error:', err);
+  res.status(500).json({ message: err.message, stack: err.stack });
+});
+
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
